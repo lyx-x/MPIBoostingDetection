@@ -10,9 +10,11 @@
 #include <math.h> 
 #include "mpi.h" 
 #include <iostream>
+#include "Image.h"
 using namespace std;
  
 int main(int argc, char *argv[]) {
+	/*
 	int n, rank, size, i;
 	double PI25DT = 3.141592653589793238462643;
 	double mypi, pi, h, sum, x;
@@ -38,6 +40,9 @@ int main(int argc, char *argv[]) {
 				<< fabs(pi - PI25DT) << endl;
 
 	MPI::Finalize();
+	*/
+	Image img(92, 112, "app/neg/im0.raw");
+	img.PrintRAW();
 	return 0;
 }
 
