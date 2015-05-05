@@ -9,7 +9,18 @@
 
 using namespace std;
 
-int MIN = -20000000;
+int GetType(string path) {
+	istringstream ss(path);
+	string type;
+	while (getline(ss, type, '/'))
+	{
+		if (type == "pos")
+			return 1;
+		if (type == "neg")
+			return -1;
+	}
+	return 0;
+}
 
 //Public Static Methods
 
@@ -102,10 +113,17 @@ void Image::FeatureDecode(int hash, int& x, int& y, int& w, int& h, int& type) {
 	type = hash % m;
 }
 
+void Image::PrintFeature(int index) {
+	int x, y, w, h, type;
+	FeatureDecode(featurePos[index], x, y, w, h, type);
+	cout << index << '\t' << x << '\t' << y << '\t' << w << '\t' << h << '\t' << type << endl;
+}
+
 //Constructors
 
 Image::Image(): height(0), width(0) {
 	file = "NO FILE";
+	c = 0;
 }
 
 Image::Image(int w, int h, string path): height(h), width(w) {
@@ -114,6 +132,7 @@ Image::Image(int w, int h, string path): height(h), width(w) {
 	content = new char[height * width];
 	img.read(content, height * width);
 	img.close();
+	c = GetType(file);
 	integral = new int[height * width];
 	SetIntegralAt(0, 0, PixelAt(0, 0));
 	for (int i = 1 ; i < width ; i++)
@@ -181,6 +200,10 @@ int Image::Size() const {
 	return height * width;
 }
 
+int Image::Type() const {
+	return c;
+}
+
 void Image::InitFeature() {
 	//Local method
 
@@ -228,7 +251,7 @@ void Image::InitFeatureParallel() {
 	feature = new int[featureSize];
 	localFeature = new int[featureSize];
 	for (int i = 0 ; i < featureSize ; i++)
-		localFeature[i] = MIN;
+		localFeature[i] = INT_MIN;
 	for (int i = rank ; i < featureSize ; i += size)
 		SetFeatureAt(i);
 	MPI::COMM_WORLD.Reduce(localFeature, feature, featureSize, MPI::INT, MPI::MAX, 0);

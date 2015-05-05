@@ -12,6 +12,9 @@
 #include <iostream>
 #include <cmath>
 #include "mpi.h"
+#include <sstream>
+#include <climits>
+#include "Globals.h"
 
 using namespace std;
 
@@ -22,6 +25,7 @@ public:
 	static void PrintFeaturePos();
 	static int FeatureEncode(int, int, int, int, int);
 	static void FeatureDecode(int, int&, int&, int&, int&, int&);
+	static void PrintFeature(int);
 
 	Image();
 	Image(int, int, string); //width, height and path
@@ -32,6 +36,7 @@ public:
 	int Height() const;
 	int Width() const;
 	int Size() const;
+	int Type() const;
 	void InitFeature();
 	void InitFeatureParallel();
 	int FeatureAt(int) const; //index, read feature and not localFeature
@@ -44,6 +49,7 @@ private:
 
 	const int height; //Not really useful, just a generic method to read an image
 	const int width;
+	int c;
 	char* content = NULL; //image
 	int* integral = NULL; //integral image
 	int* feature = NULL; //features
