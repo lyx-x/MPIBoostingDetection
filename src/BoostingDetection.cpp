@@ -1,10 +1,10 @@
 /*
  ============================================================================
  Name        : BoostingDetection.c
- Author      : 
+ Author      : LYX
  Version     :
- Copyright   : Your copyright notice
- Description : Compute Pi in MPI C++
+ Copyright   :
+ Description : Boosting Detection
  ============================================================================
  */
 #include "mpi.h" 
