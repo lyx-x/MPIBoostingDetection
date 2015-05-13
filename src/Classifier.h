@@ -8,7 +8,6 @@
 #ifndef CLASSIFIER_H_
 #define CLASSIFIER_H_
 
-#include "Image.h"
 #include "Images.h"
 #include <cstdlib>
 

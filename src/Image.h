@@ -17,10 +17,11 @@
 #include "Globals.h"
 
 using namespace std;
+using namespace Globals;
 
 class Image {
 public:
-	static void Init(int, int); //Find all possible feature
+	static void Init(); //Find all possible feature
 	static int FeatureSize();
 	static void PrintFeaturePos();
 	static int FeatureEncode(int, int, int, int, int);
@@ -28,7 +29,7 @@ public:
 	static void PrintFeature(int);
 
 	Image();
-	Image(int, int, string); //width, height and path
+	Image(string); //width, height and path
 	virtual ~Image();
 	void PrintRAW() const;
 	void PrintIntegral() const;
@@ -38,17 +39,14 @@ public:
 	int Size() const;
 	int Type() const;
 	void InitFeature();
-	void InitFeatureParallel();
+	void ComputeFeature();
+	void ComputeFeatureParallel();
 	int FeatureAt(int) const; //index, read feature and not localFeature
 
 private:
-	static int gHeight;
-	static int gWidth;
 	static int* featurePos;
 	static int featureSize;
 
-	const int height; //Not really useful, just a generic method to read an image
-	const int width;
 	int c;
 	char* content = NULL; //image
 	int* integral = NULL; //integral image

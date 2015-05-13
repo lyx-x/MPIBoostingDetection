@@ -19,8 +19,8 @@ extern const int posCount;
 extern const string trainPath;
 extern const string validationPath;
 extern const string testPath;
-extern const int defaultWidth;
-extern const int defaultHeight;
+extern const int width;
+extern const int height;
 
 }
 

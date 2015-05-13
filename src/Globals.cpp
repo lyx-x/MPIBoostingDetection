@@ -14,7 +14,7 @@ const int posCount(818);
 const string trainPath = "../app/";
 const string validationPath("../dev/");
 const string testPath("../test/");
-const int defaultWidth(112);
-const int defaultHeight(92);
+const int width(112);
+const int height(92);
 
 } /* namespace Globals */

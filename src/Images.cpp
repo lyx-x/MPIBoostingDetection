@@ -25,7 +25,7 @@ void ReadImages(vector<Image> images, string path) {
 		_path += "neg/im";
 		_path += i;
 		_path += ".raw";
-		Image img(defaultWidth, defaultHeight, _path);
+		Image img(_path);
 		images.push_back(img);
 	}
 	for (int i = 0 ; i < posCount ; i++) {
@@ -33,7 +33,7 @@ void ReadImages(vector<Image> images, string path) {
 		_path += "pos/im";
 		_path += i;
 		_path += ".raw";
-		Image img(defaultWidth, defaultHeight, _path);
+		Image img(_path);
 		images.push_back(img);
 	}
 }
