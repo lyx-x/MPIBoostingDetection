@@ -1,0 +1,12 @@
+Reading Images: 4.65419seconds.
+Computing classifiers locally 200 times: 6.864seconds.
+.
+esting:
+
+Test Classifier
+	Neg	Pos
+Neg	106	2
+Pos	20	72
+Rate: 0.89
+
+End of Test: 5.81168seconds.

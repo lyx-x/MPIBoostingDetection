@@ -17,6 +17,7 @@ namespace Globals {
 
 extern const int negCount;
 extern const int posCount;
+extern const string dir;
 extern const string trainPath;
 extern const string validationPath;
 extern const string testPath;

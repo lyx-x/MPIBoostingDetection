@@ -16,10 +16,6 @@ double* w2 = NULL;
 void InitClassifier() {
 	w1 = new double[featureSize];
 	w2 = new double[featureSize];
-	for (int i = 0 ; i < featureSize ; i++) {
-		w1[i] = 1;
-		w2[i] = 0;
-	}
 }
 
 int Classify(Image* img, int index) {
@@ -35,6 +31,8 @@ int Classify(Image* img) {
 }
 
 void Train(int K, int index) {
+	w1[index] = 1;
+	w2[index] = 0;
 	for (int i = 0 ; i < K ; i++) {
 		int choice = RandomImage();
 		Image* img = GetTrainAt(choice);
@@ -62,21 +60,27 @@ void TrainParallel(int K) {
 	double* globalW1 = new double[featureSize];
 	double*	globalW2 = new double[featureSize];
 	for (int i = 0 ; i < featureSize ; i++) {
-		globalW1[i] = numeric_limits<double>::min();
-		globalW2[i] = numeric_limits<double>::min();
+		w1[i] = numeric_limits<double>::max();
+		w2[i] = numeric_limits<double>::max();
 	}
+	if (rank == 0)
+		for (int i = 0 ; i < featureSize ; i++) {
+			globalW1[i] = numeric_limits<double>::max();
+			globalW2[i] = numeric_limits<double>::max();
+		}
 	for (int index = rank ; index < featureSize ; index += size)
 		Train(K, index);
-	MPI::COMM_WORLD.Reduce(w1, globalW1, featureSize, MPI_DOUBLE, MPI_MAX, 0);
-	MPI::COMM_WORLD.Reduce(w2, globalW2, featureSize, MPI_DOUBLE, MPI_MAX, 0);
-	for (int i = 0 ; i < featureSize ; i++) {
-		w1[i] = globalW1[i];
-		w2[i] = globalW2[i];
-	}
+	MPI::COMM_WORLD.Reduce(w1, globalW1, featureSize, MPI_DOUBLE, MPI_MIN, 0);
+	MPI::COMM_WORLD.Reduce(w2, globalW2, featureSize, MPI_DOUBLE, MPI_MIN, 0);
 	if (rank != 0) {
 		delete[] w1;
 		delete[] w2;
 	}
+	else
+		for (int i = 0 ; i < featureSize ; i++) {
+			w1[i] = globalW1[i];
+			w2[i] = globalW2[i];
+		}
 	delete[] globalW1;
 	delete[] globalW2;
 	t = clock() - t;
@@ -96,7 +100,7 @@ void SetEpsilon(double e) {
 }
 
 void Print() {
-	ofstream out("classifier.pos");
+	ofstream out(dir + "classifier.pos");
 	for (int i = 0 ; i < featureSize ; i++) {
 		//PrintFeature(i);
 		out << i << '\t';

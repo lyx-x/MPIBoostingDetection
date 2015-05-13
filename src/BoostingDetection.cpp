@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 		journal << "Testing:" << endl;
 		clock_t t;
 		t = clock();
-		TestClassifier(500);
+		TestClassifier(200);
 		t = clock() - t;
 		journal << "End of Test: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
 	}
@@ -77,5 +77,5 @@ void TestClassifier(int n) {
 	journal << "\tNeg\tPos\n";
 	journal << "Neg\t" << summary[0][0] << '\t' << summary[0][1] << '\n';
 	journal << "Pos\t" << summary[1][0] << '\t' << summary[1][1] << '\n';
-	journal << "Rate: " << (double)(summary[0][0] + summary[1][1]) / (double)n << endl;
+	journal << "Rate: " << (double)(summary[0][0] + summary[1][1]) / (double)n << endl << endl;
 }
