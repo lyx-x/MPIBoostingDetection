@@ -19,15 +19,20 @@
 using namespace std;
 using namespace Globals;
 
+namespace Globals {
+	extern int* featurePos;
+	extern int featureSize;
+
+	void InitFeatures(); //Find all possible feature
+	void PrintFeaturePos();
+	int FeatureEncode(int, int, int, int, int);
+	void FeatureDecode(int, int&, int&, int&, int&, int&);
+	void PrintFeature(int);
+	int GetType(string);
+}
+
 class Image {
 public:
-	static void Init(); //Find all possible feature
-	static int FeatureSize();
-	static void PrintFeaturePos();
-	static int FeatureEncode(int, int, int, int, int);
-	static void FeatureDecode(int, int&, int&, int&, int&, int&);
-	static void PrintFeature(int);
-
 	Image();
 	Image(string); //width, height and path
 	virtual ~Image();
@@ -38,26 +43,17 @@ public:
 	int Width() const;
 	int Size() const;
 	int Type() const;
-	void InitFeature();
-	void ComputeFeature();
-	void ComputeFeatureParallel();
-	int FeatureAt(int) const; //index, read feature and not localFeature
+	int FeatureAt(int) const; //index
 
 private:
-	static int* featurePos;
-	static int featureSize;
-
 	int c;
 	char* content = NULL; //image
 	int* integral = NULL; //integral image
-	int* feature = NULL; //features
-	int* localFeature = NULL;
 	string file;
 	int PixelAt(int, int) const; //row and line: (x, y)
 	int IntegralAt(int, int) const; //x and y
 	void SetIntegralAt(int, int, int) const; //x, y and value
-	void SetFeatureAt(int); //index of feature
-	void SetFeatureAt(int, int, int, int, int, int); //x, y, width, height, type and index
+	int FeatureAt(int, int, int, int, int) const; //x, y, width, height and type
 	int PartialSum(int, int, int, int) const; //x, y, width and height
 };
 

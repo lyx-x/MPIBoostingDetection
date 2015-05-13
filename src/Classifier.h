@@ -17,7 +17,7 @@ using namespace Globals;
 namespace Classifier {
 
 void Init();
-int Classify(Image, int); //function h(x)
+int Classify(Image*, int); //function h(x)
 void Train(int);
 void TrainParallel(int);
 double GetW1At(int);

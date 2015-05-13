@@ -44,8 +44,8 @@ Adaboost::Adaboost(int i) {
 	w1 = new double[N];
 	w2 = new double[N];
 	feature = new int[N];
-	error = new double[Image::FeatureSize()];
-	localError = new double[Image::FeatureSize()];
+	error = new double[featureSize];
+	localError = new double[featureSize];
 }
 
 Adaboost::~Adaboost() {
@@ -87,7 +87,7 @@ double Adaboost::theta = 0;
 double Adaboost::Error(int k) {
 	double sum = 0;
 	for (int j = 0 ; j < n ; j++)
-		sum += lambda[j] * Dirac(Classifier::Classify(Images::GetValidationAt(j), k), Images::GetValidationAt(j).Type());
+		sum += lambda[j] * Dirac(Classifier::Classify(GetValidationAt(j), k), GetValidationAt(j)->Type());
 	return sum;
 }
 
@@ -100,10 +100,10 @@ void Adaboost::Iteration(int k) {
 	double initLambda = 1 / n;
 	for (int j = 0 ; j < n ; j++)
 		lambda[j] = initLambda;
-	localError = new double[Image::FeatureSize()];
+	localError = new double[featureSize];
 	int minIndex = -1;
 	double error = DBL_MAX;
-	for (int i = 0 ; i < Image::FeatureSize() ; i++) {
+	for (int i = 0 ; i < featureSize ; i++) {
 		localError[i] = Error(i);
 		if (localError[i] < error) {
 			minIndex = i;
@@ -114,7 +114,7 @@ void Adaboost::Iteration(int k) {
 	w2[k] = Classifier::GetW2At(minIndex);
 	alpha[k] = 0.5 * log(1 / error - 1);
 	for (int j = 0 ; j < n ; j++)
-		lambda[k] *= exp(-Images::GetValidationAt(j).Type() * alpha[k] * Classifier::Classify(Images::GetValidationAt(j), k));
+		lambda[k] *= exp(-GetValidationAt(j)->Type() * alpha[k] * Classifier::Classify(GetValidationAt(j), k));
 	Normalize(lambda, n);
 }
 

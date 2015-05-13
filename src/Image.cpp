@@ -7,22 +7,12 @@
 
 #include "Image.h"
 
-int GetType(string path) {
-	istringstream ss(path);
-	string type;
-	while (getline(ss, type, '/'))
-	{
-		if (type == "pos")
-			return 1;
-		if (type == "neg")
-			return -1;
-	}
-	return 0;
-}
+namespace Globals {
 
-//Public Static Methods
+int* featurePos = NULL;
+int featureSize = 0;
 
-void Image::Init(){
+void InitFeatures(){
 	int count = 0;
 	for (int x = 0 ; x < width ; x += 4)
 		for (int y = 0 ; y < height ; y += 4)
@@ -31,9 +21,9 @@ void Image::Init(){
 				{
 					if (x + w * 2 <= width && y + h <= height)
 						count++;
-					if (x + w * 2 <= width && y + h <= height)
+					if (x + w <= width && y + h * 2 <= height)
 						count++;
-					if (x + w * 3 <= width && y + h * 2 <= height)
+					if (x + w * 3 <= width && y + h <= height)
 						count++;
 					if (x + w * 2 <= width && y + h * 2 <= height)
 						count++;
@@ -51,12 +41,12 @@ void Image::Init(){
 						featurePos[count] = FeatureEncode(x, y, w, h, 0);
 						count++;
 					}
-					if (x + w * 2 <= width && y + h <= height)
+					if (x + w <= width && y + h * 2 <= height)
 					{
 						featurePos[count] = FeatureEncode(x, y, w, h, 1);
 						count++;
 					}
-					if (x + w * 3 <= width && y + h * 2 <= height)
+					if (x + w * 3 <= width && y + h <= height)
 					{
 						featurePos[count] = FeatureEncode(x, y, w, h, 2);
 						count++;
@@ -69,20 +59,18 @@ void Image::Init(){
 				}
 }
 
-int Image::FeatureSize() {
-	return featureSize;
-}
-
-void Image::PrintFeaturePos() {
+void PrintFeaturePos() {
 	ofstream out("feature.pos");
 	out << "Count: " << featureSize << endl;
 	for (int i = 0 ; i < featureSize ; i++) {
-		out << *(featurePos + i) << endl;
+		int x, y, w, h, type;
+		FeatureDecode(featurePos[i], x, y, w, h, type);
+		out << i << '\t' << *(featurePos + i) << '\t' << FeatureEncode(x, y, w, h, type) << '\t' << x << '\t' << y << '\t' << w << '\t' << h << '\t' << type << endl;
 	}
 	out.close();
 }
 
-int Image::FeatureEncode(int x, int y, int w, int h, int type) {
+int FeatureEncode(int x, int y, int w, int h, int type) {
 	int m = max(width, height) / 4 + 1;
 	int hash = type;
 	hash *= m;
@@ -96,7 +84,7 @@ int Image::FeatureEncode(int x, int y, int w, int h, int type) {
 	return hash;
 }
 
-void Image::FeatureDecode(int hash, int& x, int& y, int& w, int& h, int& type) {
+void FeatureDecode(int hash, int& x, int& y, int& w, int& h, int& type) {
 	int m = max(width, height) / 4 + 1;
 	h = (hash % m) * 4;
 	hash /= m;
@@ -109,10 +97,25 @@ void Image::FeatureDecode(int hash, int& x, int& y, int& w, int& h, int& type) {
 	type = hash % m;
 }
 
-void Image::PrintFeature(int index) {
+void PrintFeature(int index) {
 	int x, y, w, h, type;
 	FeatureDecode(featurePos[index], x, y, w, h, type);
 	cout << index << '\t' << x << '\t' << y << '\t' << w << '\t' << h << '\t' << type << endl;
+}
+
+int GetType(string path) {
+	istringstream ss(path);
+	string type;
+	while (getline(ss, type, '/'))
+	{
+		if (type == "pos")
+			return 1;
+		if (type == "neg")
+			return -1;
+	}
+	return 0;
+}
+
 }
 
 //Constructors
@@ -138,14 +141,11 @@ Image::Image(string path) {
 	for (int i = 1 ; i < width ; i++)
 		for (int j = 1 ; j < height ; j++)
 			SetIntegralAt(i, j, IntegralAt(i - 1, j) + IntegralAt(i, j - 1) + PixelAt(i, j) - IntegralAt(i - 1, j - 1));
-	InitFeature();
 }
 
 Image::~Image() {
 	delete[] content;
 	delete[] integral;
-	delete[] feature;
-	delete[] localFeature;
 }
 
 //Public Methods
@@ -178,7 +178,10 @@ void Image::PrintFeature() const {
 	out << "File: " << file << ' ' << width << " * " << height << endl;
 	out << "Count: " << featureSize << endl;
 	for (int i = 0 ; i < featureSize ; i++) {
+		int x, y, w, h, type;
+		FeatureDecode(featurePos[i], x, y, w, h, type);
 		out << FeatureAt(i) << endl;
+		out << i << '\t' << *(featurePos + i) << '\t' << x << '\t' << y << '\t' << w << '\t' << h << '\t' << type << endl;
 	}
 	out << "End" << endl;
 	out.close();
@@ -200,71 +203,14 @@ int Image::Type() const {
 	return c;
 }
 
-void Image::InitFeature() {
-	localFeature = new int[featureSize];
-	for (int i = 0 ; i < featureSize ; i++)
-		localFeature[i] = -1;
+int Image::FeatureAt(int index) const {
+	int hash = featurePos[index];
+	int x, y, w, h, type;
+	FeatureDecode(hash, x, y, w, h, type);
+	return FeatureAt(x, y, w, h, type);
 }
 
-void Image::ComputeFeature() {
-	//Local method
-	localFeature = new int[featureSize];
-	int count = 0;
-	for (int x = 0 ; x < width ; x += 4)
-		for (int y = 0 ; y < height ; y += 4)
-			for (int w = 4 ; w < width ; w += 4)
-				for (int h = 4 ; h < height ; h += 4)
-				{
-					if (x + w * 2 < width && y + h < height)
-					{
-						SetFeatureAt(x, y, w, h, 0, count);
-						count++;
-					}
-					if (x + w * 2 < width && y + h < height)
-					{
-						SetFeatureAt(x, y, w, h, 1, count);
-						count++;
-					}
-					if (x + w * 3 < width && y + h * 2 < height)
-					{
-						SetFeatureAt(x, y, w, h, 2, count);
-						count++;
-					}
-					if (x + w * 2 < width && y + h * 2 < height)
-					{
-						SetFeatureAt(x, y, w, h, 3, count);
-						count++;
-					}
-				}
 
-	//Parallel Method
-	/*localFeature = new int[featureSize];
-	for (int i = 0 ; i < featureSize ; i++)
-		SetFeatureAt(i);*/
-}
-
-void Image::ComputeFeatureParallel() {
-	int rank, size;
-	size = MPI::COMM_WORLD.Get_size();
-	rank = MPI::COMM_WORLD.Get_rank();
-	if (rank == 0)
-		cout << size << ' ' << rank << endl;
-	feature = new int[featureSize];
-	for (int i = 0 ; i < featureSize ; i++)
-		localFeature[i] = INT_MIN;
-	for (int i = rank ; i < featureSize ; i += size)
-		SetFeatureAt(i);
-	MPI::COMM_WORLD.Reduce(localFeature, feature, featureSize, MPI::INT, MPI::MAX, 0);
-}
-
-int Image::FeatureAt(int i) const {
-	return feature[i];
-}
-
-//Private Static Methods
-
-int Image::featureSize = 0;
-int* Image::featurePos = NULL;
 
 //Private Methods
 
@@ -280,13 +226,7 @@ void Image::SetIntegralAt(int x, int y, int val) const {
 	*(integral + (x + y * width)) = val;
 }
 
-void Image::SetFeatureAt(int index) {
-	int x, y, w, h, type;
-	FeatureDecode(featurePos[index], x, y, w, h, type);
-	SetFeatureAt(x, y, w, h, type, index);
-}
-
-void Image::SetFeatureAt(int x, int y, int w, int h, int type, int index) {
+int Image::FeatureAt(int x, int y, int w, int h, int type) const {
 	int white = 0;
 	int black = 0;
 	switch (type) {
@@ -312,10 +252,10 @@ void Image::SetFeatureAt(int x, int y, int w, int h, int type, int index) {
 	default:
 		cerr << "Error: Undefined type of feature" << endl;
 	}
-	localFeature[index] = white - black;
+	return white - black;
 }
 
 int Image::PartialSum(int x, int y, int w, int h) const {
-	return IntegralAt(x + w, y + h) + IntegralAt(x, y) - IntegralAt(x + w, y) - IntegralAt(x, y + h);
+	return IntegralAt(x + w - 1, y + h - 1) + IntegralAt(x, y) - IntegralAt(x + w - 1, y) - IntegralAt(x, y + h - 1);
 }
 

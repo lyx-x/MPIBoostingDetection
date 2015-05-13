@@ -10,7 +10,7 @@
 
 #include "mpi.h" 
 #include <iostream>
-#include "Image.h"
+#include "Images.h"
 
 using namespace std;
 using namespace Globals;
@@ -19,19 +19,18 @@ int main(int argc, char *argv[]) {
 	MPI::Init(argc, argv);
 	int rank = MPI::COMM_WORLD.Get_rank();
 	cout << "PID: " << rank << endl;
-	Image::Init();
-	cout << Image::FeatureSize() << endl;
-	Image::PrintFeaturePos();
-	/*
-	string _path = "../app/neg/im0.raw";
-	Image img(_path); //don't launch the application with Eclipse, wrong path
+	InitFeatures();
+	cout << featureSize << endl;
+	//PrintFeaturePos();
+
+	InitImages();
 	if (rank == 0)
 	{
-		img.PrintRAW();
-		cout << Image::FeatureSize() << endl;
-		img.PrintFeature();
+		GetTestAt(4416)->PrintRAW();
+		GetTestAt(4416)->PrintFeature();
 	}
-	*/
+	DropImages();
+
 	MPI::Finalize();
 	return 0;
 }

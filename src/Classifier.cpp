@@ -10,13 +10,13 @@
 namespace Classifier {
 
 double epsilon(0.5);
-double* localW1 = new double[Image::FeatureSize()];;
-double* localW2 = new double[Image::FeatureSize()];;
-double* w1 = new double[Image::FeatureSize()];;
-double* w2 = new double[Image::FeatureSize()];;
+double* localW1 = new double[featureSize];;
+double* localW2 = new double[featureSize];;
+double* w1 = new double[featureSize];;
+double* w2 = new double[featureSize];;
 
 void Init() {
-	for (int i = 0 ; i < Image::FeatureSize() ; i++) {
+	for (int i = 0 ; i < featureSize ; i++) {
 		localW1[i] = 1;
 		localW2[i] = 0;
 		w1[i] = 1;
@@ -24,12 +24,12 @@ void Init() {
 	}
 }
 
-int Classify(Image img, int index) {
-	return w1[index] * img.FeatureAt(index) + w2[index] >= 0 ? 1 : -1;
+int Classify(Image* img, int index) {
+	return w1[index] * img->FeatureAt(index) + w2[index] >= 0 ? 1 : -1;
 }
 
 void Train(int K) {
-	for (int index = 0 ; index < Image::FeatureSize() ; index++)
+	for (int index = 0 ; index < featureSize ; index++)
 		Train(K, index);
 }
 
@@ -50,8 +50,8 @@ void SetEpsilon(double e) {
 }
 
 void Print() {
-	for (int i = 0 ; i < Image::FeatureSize() ; i++) {
-		Image::PrintFeature(i);
+	for (int i = 0 ; i < featureSize ; i++) {
+		PrintFeature(i);
 		cout << "w1: " << w1[i] << "\tw2: " << w2[i] << endl;
 	}
 }
@@ -66,11 +66,11 @@ void Delete() {
 void Train(int K, int index) {
 	for (int i = 0 ; i < K ; i++) {
 		int choice = rand() % (posCount + negCount);
-		Image img = Images::GetTrainAt(choice);
-		int x = img.FeatureAt(index);
+		Image* img = GetTrainAt(choice);
+		int x = img->FeatureAt(index);
 		int h = Classify(img, index);
-		localW1[index] -= epsilon * (h - img.Type()) * x;
-		localW2[index] -= epsilon * (h - img.Type());
+		localW1[index] -= epsilon * (h - img->Type()) * x;
+		localW2[index] -= epsilon * (h - img->Type());
 	}
 }
 
