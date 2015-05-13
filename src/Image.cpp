@@ -116,6 +116,16 @@ int GetType(string path) {
 	return 0;
 }
 
+int RandomImage() {
+	int type = rand() % 2;
+	int choice;
+	if (type == 0)
+		choice = rand() % posCount + negCount;
+	else
+		choice = rand() % negCount;
+	return choice;
+}
+
 }
 
 //Constructors
@@ -151,25 +161,25 @@ Image::~Image() {
 //Public Methods
 
 void Image::PrintRAW() const {
-	cout << "File: " << file << ' ' << width << " * " << height << endl;
-	cout << "RAW" << endl;
+	journal << "File: " << file << ' ' << width << " * " << height << endl;
+	journal << "RAW" << endl;
 	for (int i = 0 ; i < width ; i++) {
 		for (int j = 0 ; j < height ; j++)
-			cout << PixelAt(i, j) << '\t';
-		cout << endl;
+			journal << PixelAt(i, j) << '\t';
+		journal << endl;
 	}
-	cout << "EOF" << endl;
+	journal << "EOF" << endl;
 }
 
 void Image::PrintIntegral() const {
-	cout << "File: " << file << ' ' << width << " * " << height << endl;
-	cout << "Integral" << endl;
+	journal << "File: " << file << ' ' << width << " * " << height << endl;
+	journal << "Integral" << endl;
 	for (int i = 0 ; i < width ; i++) {
 		for (int j = 0 ; j < height ; j++)
-			cout << IntegralAt(i, j) << '\t';
-		cout << endl;
+			journal << IntegralAt(i, j) << '\t';
+		journal << endl;
 	}
-	cout << "EOF" << endl;
+	journal << "EOF" << endl;
 }
 
 void Image::PrintFeature() const {

@@ -9,6 +9,7 @@
 #define GLOBALS_H_
 
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -21,6 +22,8 @@ extern const string validationPath;
 extern const string testPath;
 extern const int width;
 extern const int height;
+extern ofstream error;
+extern ofstream journal;
 
 }
 

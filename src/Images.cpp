@@ -20,7 +20,7 @@ void InitImages() {
 	ReadImages(&validationImages, validationPath);
 	ReadImages(&testImages, testPath);
 	t = clock() - t;
-	printf ("Reading Images: %f seconds.\n",((float)t)/CLOCKS_PER_SEC);
+	journal << "Reading Images: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
 }
 
 void ReadImages(vector<Image*>* images, string path) {

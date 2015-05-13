@@ -13,7 +13,6 @@
 #include <cmath>
 #include "mpi.h"
 #include <sstream>
-#include <climits>
 #include "Globals.h"
 
 using namespace std;
@@ -29,6 +28,7 @@ namespace Globals {
 	void FeatureDecode(int, int&, int&, int&, int&, int&);
 	void PrintFeature(int);
 	int GetType(string);
+	int RandomImage();
 }
 
 class Image {

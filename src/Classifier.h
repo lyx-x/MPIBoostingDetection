@@ -9,29 +9,27 @@
 #define CLASSIFIER_H_
 
 #include "Images.h"
-#include <cstdlib>
+#include <limits>
 
 using namespace std;
 using namespace Globals;
 
 namespace Classifier {
 
-void Init();
+extern double epsilon;
+extern double* w1;
+extern double* w2;
+
+void InitClassifier();
 int Classify(Image*, int); //function h(x)
+int Classify(Image*);
 void Train(int);
 void TrainParallel(int);
 double GetW1At(int);
 double GetW2At(int);
 void SetEpsilon(double);
 void Print();
-void Delete();
-
-extern double epsilon;
-extern double* localW1;
-extern double* localW2;
-extern double* w1;
-extern double* w2;
-void Train(int, int); //times and index of feature
+void DropClassifier();
 
 }
 

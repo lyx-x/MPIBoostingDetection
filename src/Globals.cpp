@@ -9,12 +9,15 @@
 
 namespace Globals {
 
+const string dir = "../";
 const int negCount(4415);
 const int posCount(818);
-const string trainPath = "app/";
-const string validationPath("dev/");
-const string testPath("test/");
+const string trainPath = dir + "app/";
+const string validationPath = dir + "dev/";
+const string testPath = dir + "test/";
 const int width(112);
 const int height(92);
+ofstream error(dir + "err.log");
+ofstream journal(dir + "general.log");
 
 } /* namespace Globals */
