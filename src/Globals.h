@@ -8,7 +8,6 @@
 #ifndef GLOBALS_H_
 #define GLOBALS_H_
 
-#include <string>
 #include <fstream>
 
 using namespace std;

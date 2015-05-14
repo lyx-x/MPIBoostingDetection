@@ -117,7 +117,6 @@ void SetEpsilon(double e) {
 void Print() {
 	ofstream out(dir + "classifier.pos");
 	for (int i = 0 ; i < featureSize ; i++) {
-		//PrintFeature(i);
 		out << i << '\t';
 		out << "w1: " << w1[i] << "\t\tw2: " << w2[i] << endl;
 	}

@@ -17,7 +17,6 @@ using namespace std;
 namespace imageUtils {
 
 void InitImages();
-void ReadImages(vector<Image*>*, string);
 Image* GetTrainAt(int);
 Image* GetValidationAt(int);
 Image* GetTestAt(int);

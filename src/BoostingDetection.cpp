@@ -8,10 +8,7 @@
  ============================================================================
  */
 
-#include "mpi.h" 
-#include <iostream>
 #include "Adaboost.h"
-#include "Classifier.h"
 
 using namespace std;
 using namespace imageUtils;
@@ -28,21 +25,43 @@ int main(int argc, char *argv[]) {
 	InitImages();
 
 	Classifier::InitClassifier();
-	Classifier::TrainParallel(500);
+	Classifier::TrainParallel(100);
+
+	Adaboost::InitAdaboost(3);
 
 	clock_t t;
 	if (rank == 0) {
 		journal << "Testing:" << endl;
 		t = clock();
 	}
-	TestClassifier(500, rank);
+
+	if (rank == 0) {
+		Adaboost::Iteration();
+
+		for (int i = 0 ; i < 50 ; i++) {
+			int choice = RandomImage();
+			Image* img = GetTestAt(choice);
+			int type = img->Type();
+			int answer = Adaboost::Classify(img);
+			journal << type << '\t' << answer << endl;
+		}
+
+	}
+
+
+	//TestClassifier(100, rank);
 	if (rank == 0) {
 		t = clock() - t;
 		journal << "End of Test: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
 	}
 
-	DropImages();
+	Adaboost::DropAdaboost();
+
 	Classifier::DropClassifier();
+
+	DropImages();
+	DropFeatures();
+
 	error.close();
 	journal.close();
 	MPI::Finalize();
@@ -86,4 +105,8 @@ void TestClassifier(int n, int rank) {
 		journal << "Pos\t" << globalSummary[1][0] << '\t' << globalSummary[1][1] << '\n';
 		journal << "Rate: " << (double)(globalSummary[0][0] + globalSummary[1][1]) / (double)(n * MPI::COMM_WORLD.Get_size()) << endl << endl;
 	}
+}
+
+void TestAdaboost(int n, int rank) {
+
 }

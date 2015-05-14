@@ -126,6 +126,14 @@ int RandomImage() {
 	return choice;
 }
 
+int RandomFeature() {
+	return rand() * featureSize;
+}
+
+void DropFeatures() {
+	delete[] featurePos;
+}
+
 }
 
 //Constructors

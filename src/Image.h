@@ -8,10 +8,7 @@
 #ifndef IMAGE_H_
 #define IMAGE_H_
 
-#include <fstream>
 #include <iostream>
-#include <cmath>
-#include "mpi.h"
 #include <sstream>
 #include "Globals.h"
 
@@ -29,6 +26,8 @@ namespace imageUtils {
 	void PrintFeature(int);
 	int GetType(string);
 	int RandomImage();
+	int RandomFeature();
+	void DropFeatures();
 }
 
 class Image {

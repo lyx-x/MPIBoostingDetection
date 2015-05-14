@@ -10,15 +10,12 @@
 
 #include "Images.h"
 #include <limits>
+#include "mpi.h"
 
 using namespace std;
 using namespace imageUtils;
 
 namespace Classifier {
-
-extern double epsilon;
-extern double* w1;
-extern double* w2;
 
 void InitClassifier();
 int Classify(Image*, int); //function h(x)

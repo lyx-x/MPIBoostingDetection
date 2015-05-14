@@ -13,16 +13,6 @@ vector<Image*> trainImages;
 vector<Image*> validationImages;
 vector<Image*> testImages;
 
-void InitImages() {
-	clock_t t;
-	t = clock();
-	ReadImages(&trainImages, trainPath);
-	ReadImages(&validationImages, validationPath);
-	ReadImages(&testImages, testPath);
-	t = clock() - t;
-	journal << "Reading Images: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
-}
-
 void ReadImages(vector<Image*>* images, string path) {
 	for (int i = 0 ; i < negCount ; i++) {
 		ostringstream _path;
@@ -42,6 +32,16 @@ void ReadImages(vector<Image*>* images, string path) {
 		Image* img = new Image(_path.str());
 		images->push_back(img);
 	}
+}
+
+void InitImages() {
+	clock_t t;
+	t = clock();
+	ReadImages(&trainImages, trainPath);
+	ReadImages(&validationImages, validationPath);
+	ReadImages(&testImages, testPath);
+	t = clock() - t;
+	journal << "Reading Images: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
 }
 
 Image* GetTrainAt(int index) {
