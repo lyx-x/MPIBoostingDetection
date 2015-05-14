@@ -18,6 +18,7 @@ using namespace mpiUtils;
 namespace Adaboost {
 
 void InitAdaboost(int);
+void ReadAdaboost();
 void DropAdaboost();
 int Classify(Image*);
 void SetTheta(double);

@@ -32,7 +32,6 @@ def draw(p, detail):
 
 features = []
 with open("../adaboost.pos", 'r') as file:
-    file.readline()
     for line in file:
         features.append(tuple(map(int, line.split('\t'))))
 image = Image(112, 92, sys.argv[1])

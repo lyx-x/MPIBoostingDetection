@@ -62,6 +62,14 @@ void InitAdaboost(int i) {
 	feature = new int[N];
 }
 
+void ReadAdaboost() {
+	ifstream in(dir + "adaboost.pos");
+	double tmp;
+	for (int i = 0 ; i < N ; i++)
+		in >> feature[i] >> tmp >> w1[i] >> w2[i] >> alpha[i];
+	journal << "Read Adaboost " << N << " times\n";
+}
+
 void DropAdaboost() {
 	delete[] lambda;
 	delete[] dist;
@@ -78,7 +86,7 @@ int Classify(Image* img) {
 		sum += alpha[i] * (w1[i] * img->FeatureAt(feature[i]) + w2[i]);
 		sumAlpha += alpha[i];
 	}
-	return sum * theta >= sumAlpha ? 1 : -1;
+	return sum >= sumAlpha * theta ? 1 : -1;
 }
 
 void SetTheta(double t) {
@@ -126,9 +134,8 @@ void Iteration() {
 
 void PrintAdaboost() {
 	ofstream out(dir + "adaboost.pos");
-	out << "Adaboost Selection:" << endl;
 	for (int i = 0 ; i < N ; i++)
-		out << feature[i] << '\t' << featurePos[feature[i]] << '\t' << w1[i] << '\t' << w2[i] << endl;
+		out << feature[i] << '\t' << featurePos[feature[i]] << '\t' << w1[i] << '\t' << w2[i] << '\t' << alpha[i] << endl;
 }
 
 }
