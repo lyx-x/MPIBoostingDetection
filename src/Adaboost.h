@@ -13,7 +13,7 @@
 #include <cfloat>
 
 using namespace std;
-using namespace Globals;
+using namespace imageUtils;
 
 namespace Adaboost {
 

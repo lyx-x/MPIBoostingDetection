@@ -14,10 +14,10 @@
 #include "Classifier.h"
 
 using namespace std;
-using namespace Globals;
+using namespace imageUtils;
 
 void TestFeature();
-void TestClassifier(int);
+void TestClassifier(int, int);
 
 int main(int argc, char *argv[]) {
 	srand(time(NULL));
@@ -28,19 +28,21 @@ int main(int argc, char *argv[]) {
 	InitImages();
 
 	Classifier::InitClassifier();
-	Classifier::TrainParallel(200);
+	Classifier::TrainParallel(500);
 
-	if (rank == 0)
-	{
+	clock_t t;
+	if (rank == 0) {
 		journal << "Testing:" << endl;
-		clock_t t;
 		t = clock();
-		TestClassifier(200);
+	}
+	TestClassifier(500, rank);
+	if (rank == 0) {
 		t = clock() - t;
 		journal << "End of Test: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
 	}
 
 	DropImages();
+	Classifier::DropClassifier();
 	error.close();
 	journal.close();
 	MPI::Finalize();
@@ -60,13 +62,16 @@ void TestFeature() {
  * 	1	Pos
  */
 
-void TestClassifier(int n) {
-	Classifier::Print();
-	journal << "\nTest Classifier\n";
+void TestClassifier(int n, int rank) {
+	if (rank == 0) {
+		Classifier::Print();
+		journal << "\nTest Classifier\n";
+	}
+	int globalSummary[2][2];
 	int summary[2][2];
 	for (int i = 0 ; i < 2 ; i++)
 		for (int j = 0 ; j < 2 ; j++)
-			summary[i][j] = 0;
+			summary[i][j] = globalSummary[i][j] = 0;
 	for (int i = 0 ; i < n ; i++) {
 		int choice = RandomImage();
 		Image* img = GetTestAt(choice);
@@ -74,8 +79,11 @@ void TestClassifier(int n) {
 		int answer = (Classifier::Classify(img) + 1) / 2;
 		summary[type][answer]++;
 	}
-	journal << "\tNeg\tPos\n";
-	journal << "Neg\t" << summary[0][0] << '\t' << summary[0][1] << '\n';
-	journal << "Pos\t" << summary[1][0] << '\t' << summary[1][1] << '\n';
-	journal << "Rate: " << (double)(summary[0][0] + summary[1][1]) / (double)n << endl << endl;
+	MPI::COMM_WORLD.Reduce(summary, globalSummary, 4, MPI_INT, MPI_SUM, 0);
+	if (rank == 0) {
+		journal << "\tNeg\tPos\n";
+		journal << "Neg\t" << globalSummary[0][0] << '\t' << globalSummary[0][1] << '\n';
+		journal << "Pos\t" << globalSummary[1][0] << '\t' << globalSummary[1][1] << '\n';
+		journal << "Rate: " << (double)(globalSummary[0][0] + globalSummary[1][1]) / (double)(n * MPI::COMM_WORLD.Get_size()) << endl << endl;
+	}
 }

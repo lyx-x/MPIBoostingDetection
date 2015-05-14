@@ -7,7 +7,7 @@
 
 #include "Image.h"
 
-namespace Globals {
+namespace imageUtils {
 
 int* featurePos = NULL;
 int featureSize = 0;

@@ -14,7 +14,7 @@
 
 using namespace std;
 
-namespace Globals {
+namespace imageUtils {
 
 void InitImages();
 void ReadImages(vector<Image*>*, string);

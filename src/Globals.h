@@ -13,7 +13,7 @@
 
 using namespace std;
 
-namespace Globals {
+namespace imageUtils {
 
 extern const int negCount;
 extern const int posCount;

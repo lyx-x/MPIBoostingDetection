@@ -12,7 +12,7 @@
 #include <limits>
 
 using namespace std;
-using namespace Globals;
+using namespace imageUtils;
 
 namespace Classifier {
 

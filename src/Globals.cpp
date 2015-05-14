@@ -7,7 +7,7 @@
 
 #include "Globals.h"
 
-namespace Globals {
+namespace imageUtils {
 
 const string dir = "../";
 const int negCount(4415);
@@ -20,4 +20,4 @@ const int height(92);
 ofstream error(dir + "err.log");
 ofstream journal(dir + "general.log");
 
-} /* namespace Globals */
+} /* namespace imageUtils */

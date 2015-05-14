@@ -7,7 +7,7 @@
 
 #include "Images.h"
 
-namespace Globals {
+namespace imageUtils {
 
 vector<Image*> trainImages;
 vector<Image*> validationImages;

@@ -16,9 +16,9 @@
 #include "Globals.h"
 
 using namespace std;
-using namespace Globals;
+using namespace imageUtils;
 
-namespace Globals {
+namespace imageUtils {
 	extern int* featurePos;
 	extern int featureSize;
 
@@ -46,7 +46,7 @@ public:
 	int FeatureAt(int) const; //index
 
 private:
-	int c;
+	int c; //-1: neg; 1: pos
 	char* content = NULL; //image
 	int* integral = NULL; //integral image
 	string file;
