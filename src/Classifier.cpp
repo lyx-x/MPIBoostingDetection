@@ -55,8 +55,6 @@ void Train(int K) {
 void TrainParallel(int K) {
 	clock_t t;
 	t = clock();
-	int rank = MPI::COMM_WORLD.Get_rank();
-	int size = MPI::COMM_WORLD.Get_size();
 	double* globalW1 = new double[featureSize];
 	double*	globalW2 = new double[featureSize];
 	/*
@@ -75,27 +73,17 @@ void TrainParallel(int K) {
 	/*
 	 * Gather Method
 	 */
-	int* recvCounts = new int[size];
-	int* displs = new int[size];
-	int length = (featureSize + size - 1) / size;
-	for (int i = 0 ; i < size ; i++) {
-		recvCounts[i] = length;
-		displs[i] = length * i;
-	}
-	recvCounts[size - 1] = featureSize - displs[size - 1];
-	for (int i = 0 ; i < recvCounts[rank] ; i++)
-		Train(K, i + displs[rank]);
-	MPI::COMM_WORLD.Gatherv(w1 + displs[rank], recvCounts[rank], MPI_DOUBLE, globalW1, recvCounts, displs, MPI_DOUBLE, 0);
-	MPI::COMM_WORLD.Gatherv(w2 + displs[rank], recvCounts[rank], MPI_DOUBLE, globalW2, recvCounts, displs, MPI_DOUBLE, 0);
-	if (rank == 0)
+	for (int i = 0 ; i < recvCounts[mpiUtils::rank] ; i++)
+		Train(K, i + displs[mpiUtils::rank]);
+	MPI::COMM_WORLD.Gatherv(w1 + displs[mpiUtils::rank], recvCounts[mpiUtils::rank], MPI_DOUBLE, globalW1, recvCounts, displs, MPI_DOUBLE, 0);
+	MPI::COMM_WORLD.Gatherv(w2 + displs[mpiUtils::rank], recvCounts[mpiUtils::rank], MPI_DOUBLE, globalW2, recvCounts, displs, MPI_DOUBLE, 0);
+	if (mpiUtils::rank == 0)
 		for (int i = 0 ; i < featureSize ; i++) {
 			w1[i] = globalW1[i];
 			w2[i] = globalW2[i];
 		}
 	MPI::COMM_WORLD.Bcast(w1, featureSize, MPI_DOUBLE, 0);
 	MPI::COMM_WORLD.Bcast(w2, featureSize, MPI_DOUBLE, 0);
-	delete[] recvCounts;
-	delete[] displs;
 	delete[] globalW1;
 	delete[] globalW2;
 	t = clock() - t;

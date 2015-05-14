@@ -14,29 +14,32 @@ using namespace std;
 using namespace imageUtils;
 
 void TestFeature();
-void TestClassifier(int, int);
+void TestClassifier(int);
 
 int main(int argc, char *argv[]) {
 	srand(time(NULL));
 	MPI::Init(argc, argv);
-	int rank = MPI::COMM_WORLD.Get_rank();
 
 	InitFeatures();
 	InitImages();
 
+	mpiUtils::rank = MPI::COMM_WORLD.Get_rank();
+	mpiUtils::size = MPI::COMM_WORLD.Get_size();
+	mpiUtils::InitGather(featureSize);
+
 	Classifier::InitClassifier();
 	Classifier::TrainParallel(100);
 
-	Adaboost::InitAdaboost(3);
+	Adaboost::InitAdaboost(1);
 
 	clock_t t;
-	if (rank == 0) {
+	if (mpiUtils::rank == 0) {
 		journal << "Testing:" << endl;
 		t = clock();
 	}
 
-	if (rank == 0) {
-		Adaboost::Iteration();
+	Adaboost::Iteration();
+	if (mpiUtils::rank == 0) {
 
 		for (int i = 0 ; i < 50 ; i++) {
 			int choice = RandomImage();
@@ -45,12 +48,12 @@ int main(int argc, char *argv[]) {
 			int answer = Adaboost::Classify(img);
 			journal << type << '\t' << answer << endl;
 		}
+		Adaboost::PrintAdaboost();
 
 	}
 
-
-	//TestClassifier(100, rank);
-	if (rank == 0) {
+	//TestClassifier(100);
+	if (mpiUtils::rank == 0) {
 		t = clock() - t;
 		journal << "End of Test: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
 	}
@@ -58,6 +61,8 @@ int main(int argc, char *argv[]) {
 	Adaboost::DropAdaboost();
 
 	Classifier::DropClassifier();
+
+	mpiUtils::DropGather();
 
 	DropImages();
 	DropFeatures();
@@ -81,8 +86,8 @@ void TestFeature() {
  * 	1	Pos
  */
 
-void TestClassifier(int n, int rank) {
-	if (rank == 0) {
+void TestClassifier(int n) {
+	if (mpiUtils::rank == 0) {
 		Classifier::Print();
 		journal << "\nTest Classifier\n";
 	}
@@ -99,11 +104,11 @@ void TestClassifier(int n, int rank) {
 		summary[type][answer]++;
 	}
 	MPI::COMM_WORLD.Reduce(summary, globalSummary, 4, MPI_INT, MPI_SUM, 0);
-	if (rank == 0) {
+	if (mpiUtils::rank == 0) {
 		journal << "\tNeg\tPos\n";
 		journal << "Neg\t" << globalSummary[0][0] << '\t' << globalSummary[0][1] << '\n';
 		journal << "Pos\t" << globalSummary[1][0] << '\t' << globalSummary[1][1] << '\n';
-		journal << "Rate: " << (double)(globalSummary[0][0] + globalSummary[1][1]) / (double)(n * MPI::COMM_WORLD.Get_size()) << endl << endl;
+		journal << "Rate: " << (double)(globalSummary[0][0] + globalSummary[1][1]) / (double)(n * mpiUtils::size) << endl << endl;
 	}
 }
 

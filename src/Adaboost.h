@@ -13,6 +13,7 @@
 
 using namespace std;
 using namespace imageUtils;
+using namespace mpiUtils;
 
 namespace Adaboost {
 
@@ -22,6 +23,7 @@ int Classify(Image*);
 void SetTheta(double);
 void Iteration(); //N times
 void IterationParallel();
+void PrintAdaboost();
 
 }
 

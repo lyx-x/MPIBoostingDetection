@@ -27,5 +27,17 @@ extern ofstream journal;
 
 }
 
+namespace mpiUtils {
+
+extern int rank;
+extern int size;
+extern int* recvCounts;
+extern int* displs;
+
+void InitGather(int);
+void DropGather();
+
+}
+
 #endif /* GLOBALS_H_ */
 

@@ -21,3 +21,28 @@ ofstream error(dir + "err.log");
 ofstream journal(dir + "general.log");
 
 } /* namespace imageUtils */
+
+namespace mpiUtils {
+
+int rank(0);
+int size(1);
+int* recvCounts = NULL;
+int* displs = NULL;
+
+void InitGather(int featureSize) {
+	recvCounts = new int[mpiUtils::size];
+	displs = new int[mpiUtils::size];
+	int length = (featureSize + mpiUtils::size - 1) / mpiUtils::size;
+	for (int i = 0 ; i < mpiUtils::size ; i++) {
+		recvCounts[i] = length;
+		displs[i] = length * i;
+	}
+	recvCounts[mpiUtils::size - 1] = featureSize - displs[mpiUtils::size - 1];
+}
+
+void DropGather() {
+	delete[] recvCounts;
+	delete[] displs;
+}
+
+} /* namespace mpiUtils */

@@ -14,6 +14,7 @@
 
 using namespace std;
 using namespace imageUtils;
+using namespace mpiUtils;
 
 namespace Classifier {
 

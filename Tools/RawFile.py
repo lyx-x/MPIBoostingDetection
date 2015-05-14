@@ -1,6 +1,5 @@
 __author__ = 'lyx'
 from PIL import Image as Img
-import sys
 
 
 class Image:
@@ -46,6 +45,14 @@ class Image:
         im.putdata(data)
         im.show()
 
+    def draw(self):
+        im = Img.new('L', (self.width, self.height))
+        data = []
+        for line in self.pixels:
+            data += line
+        im.putdata(data)
+        return im
+
 
 def transpose(files):
     for path in files:
@@ -58,8 +65,3 @@ def verify(file):
     img.show()
     img = Image(92, 112, file + ".old")
     img.show()
-
-transpose(sys.argv[1:])
-verify(sys.argv[1])
-
-
