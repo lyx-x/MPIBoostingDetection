@@ -14,6 +14,7 @@ using namespace std;
 
 namespace imageUtils {
 
+extern const int dim;
 extern const int negCount;
 extern const int posCount;
 extern const string dir;

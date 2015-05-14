@@ -14,10 +14,10 @@ int featureSize = 0;
 
 void InitFeatures(){
 	int count = 0;
-	for (int x = 0 ; x < width ; x += 4)
-		for (int y = 0 ; y < height ; y += 4)
-			for (int w = 4 ; w <= width ; w += 4)
-				for (int h = 4 ; h <= height ; h += 4)
+	for (int x = 0 ; x < width ; x += dim)
+		for (int y = 0 ; y < height ; y += dim)
+			for (int w = dim ; w <= width ; w += dim)
+				for (int h = dim ; h <= height ; h += dim)
 				{
 					if (x + w * 2 <= width && y + h <= height)
 						count++;
@@ -31,10 +31,10 @@ void InitFeatures(){
 	featureSize = count;
 	featurePos = new int[featureSize];
 	count = 0;
-	for (int x = 0 ; x < width ; x += 4)
-		for (int y = 0 ; y < height ; y += 4)
-			for (int w = 4 ; w <= width ; w += 4)
-				for (int h = 4 ; h <= height ; h += 4)
+	for (int x = 0 ; x < width ; x += dim)
+		for (int y = 0 ; y < height ; y += dim)
+			for (int w = dim ; w <= width ; w += dim)
+				for (int h = dim ; h <= height ; h += dim)
 				{
 					if (x + w * 2 <= width && y + h <= height)
 					{
@@ -60,7 +60,7 @@ void InitFeatures(){
 }
 
 void PrintFeaturePos() {
-	ofstream out("feature.pos");
+	ofstream out(dir + "feature.pos");
 	out << "Count: " << featureSize << endl;
 	for (int i = 0 ; i < featureSize ; i++) {
 		int x, y, w, h, type;
@@ -71,28 +71,28 @@ void PrintFeaturePos() {
 }
 
 int FeatureEncode(int x, int y, int w, int h, int type) {
-	int m = max(width, height) / 4 + 1;
+	int m = max(width, height) / dim + 1;
 	int hash = type;
 	hash *= m;
-	hash += x / 4;
+	hash += x / dim;
 	hash *= m;
-	hash += y / 4;
+	hash += y / dim;
 	hash *= m;
-	hash += w / 4;
+	hash += w / dim;
 	hash *= m;
-	hash += h / 4;
+	hash += h / dim;
 	return hash;
 }
 
 void FeatureDecode(int hash, int& x, int& y, int& w, int& h, int& type) {
-	int m = max(width, height) / 4 + 1;
-	h = (hash % m) * 4;
+	int m = max(width, height) / dim + 1;
+	h = (hash % m) * dim;
 	hash /= m;
-	w = (hash % m) * 4;
+	w = (hash % m) * dim;
 	hash /= m;
-	y = (hash % m) * 4;
+	y = (hash % m) * dim;
 	hash /= m;
-	x = (hash % m) * 4;
+	x = (hash % m) * dim;
 	hash /= m;
 	type = hash % m;
 }

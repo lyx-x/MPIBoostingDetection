@@ -9,6 +9,7 @@
 
 namespace imageUtils {
 
+const int dim = 8;
 const string dir = "../";
 const int negCount(4415);
 const int posCount(818);

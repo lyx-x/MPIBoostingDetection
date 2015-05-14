@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
 
 	InitFeatures();
 	InitImages();
+	//PrintFeaturePos();
 
 	mpiUtils::rank = MPI::COMM_WORLD.Get_rank();
 	mpiUtils::size = MPI::COMM_WORLD.Get_size();
@@ -31,16 +32,20 @@ int main(int argc, char *argv[]) {
 	Classifier::InitClassifier();
 	Classifier::TrainParallel(1000);
 
-	Adaboost::InitAdaboost(5);
+	Adaboost::InitAdaboost(50);
 	Adaboost::Iteration();
 	//Adaboost::ReadAdaboost();
+	Adaboost::theta = -1;
 
 	clock_t t;
 	if (mpiUtils::rank == 0) {
 		journal << "Testing:" << endl;
 		t = clock();
 	}
-	TestAdaboost(negCount + posCount);
+	while (Adaboost::theta <= 1) {
+		TestAdaboost(negCount + posCount);
+		Adaboost::theta += 0.1;
+	}
 	TestClassifier(100);
 	if (mpiUtils::rank == 0) {
 		t = clock() - t;
@@ -108,7 +113,7 @@ void TestAdaboost(int n) {
 	clock_t t = clock();
 	if (mpiUtils::rank == 0) {
 		Classifier::Print();
-		journal << "\nTest Adaboost\n";
+		journal << "\nTest Adaboost: " << Adaboost::theta << endl;
 	}
 	int globalSummary[2][2];
 	int summary[2][2];

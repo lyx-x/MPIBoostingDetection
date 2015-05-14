@@ -5,14 +5,14 @@ import sys
 
 
 def decode(feature):
-    m = max(92, 112) // 4 + 1
-    h = (feature % m) * 4
+    m = max(92, 112) // 8 + 1
+    h = (feature % m) * 8
     feature //= m
-    w = (feature % m) * 4
+    w = (feature % m) * 8
     feature //= m
-    y = (feature % m) * 4
+    y = (feature % m) * 8
     feature //= m
-    x = (feature % m) * 4
+    x = (feature % m) * 8
     feature //= m
     t = feature % m
     return x, y, w, h, t
@@ -33,7 +33,7 @@ def draw(p, detail):
 features = []
 with open("../adaboost.pos", 'r') as file:
     for line in file:
-        features.append(tuple(map(int, line.split('\t')[0:3])))
+        features.append(tuple(map(int, line.split('\t')[0:2])))
 image = Image(112, 92, sys.argv[1])
 img = image.draw()
 paint = ImageDraw.Draw(img)

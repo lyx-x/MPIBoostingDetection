@@ -17,11 +17,12 @@ using namespace mpiUtils;
 
 namespace Adaboost {
 
+extern double theta;
+
 void InitAdaboost(int);
 void ReadAdaboost();
 void DropAdaboost();
 int Classify(Image*);
-void SetTheta(double);
 void Iteration(); //N times
 void IterationParallel();
 void PrintAdaboost();

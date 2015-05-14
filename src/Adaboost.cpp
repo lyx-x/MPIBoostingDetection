@@ -15,8 +15,6 @@ int N = 0;
 double* dist = NULL;
 double* lambda = NULL;
 double* alpha = NULL;
-double* w1 = NULL;
-double* w2 = NULL;
 int* feature = NULL;
 
 int Dirac(int h, int c) {
@@ -64,8 +62,6 @@ void InitAdaboost(int i) {
 	lambda = new double[n];
 	dist = new double[featureSize];
 	alpha = new double[N];
-	w1 = new double[N];
-	w2 = new double[N];
 	feature = new int[N];
 }
 
@@ -73,7 +69,7 @@ void ReadAdaboost() {
 	ifstream in(dir + "adaboost.pos");
 	double tmp;
 	for (int i = 0 ; i < N ; i++)
-		in >> feature[i] >> tmp >> w1[i] >> w2[i] >> alpha[i];
+		in >> feature[i] >> tmp >> alpha[i];
 	journal << "Read Adaboost " << N << " times\n";
 }
 
@@ -81,8 +77,6 @@ void DropAdaboost() {
 	delete[] lambda;
 	delete[] dist;
 	delete[] alpha;
-	delete[] w1;
-	delete[] w2;
 	delete[] feature;
 }
 
@@ -90,22 +84,17 @@ int Classify(Image* img) {
 	double sum = 0;
 	double sumAlpha = 0;
 	for (int i = 0 ; i < N ; i++) {
-		sum += alpha[i] * (w1[i] * img->FeatureAt(feature[i]) + w2[i]);
+		sum += alpha[i] * Classifier::Classify(img, feature[i]);
 		sumAlpha += alpha[i];
 	}
 	return sum >= sumAlpha * theta ? 1 : -1;
 }
 
-void SetTheta(double t) {
-	theta = t;
-}
-
 void Iteration(int k) {
-	double initLambda = (double)1 / (double)n;
-	for (int j = 0 ; j < n ; j++)
-		lambda[j] = initLambda;
 	int minIndex = -1;
 	double errorLimit = numeric_limits<double>::max();
+	for (int i = 0 ; i < featureSize ; i++)
+		dist[i] = 0;
 	for (int i = 0 ; i < recvCounts[mpiUtils::rank] ; i++)
 		dist[i + displs[mpiUtils::rank]] = Error(i + displs[mpiUtils::rank]);
 	double* globalDist = new double[featureSize];
@@ -120,18 +109,19 @@ void Iteration(int k) {
 			minIndex = i;
 			errorLimit = dist[i];
 		}
-	w1[k] = Classifier::GetW1At(minIndex);
-	w2[k] = Classifier::GetW2At(minIndex);
 	feature[k] = minIndex;
 	alpha[k] = 0.5 * log(1.0 / errorLimit - 1);
 	for (int j = 0 ; j < n ; j++)
-		lambda[j] *= exp(-GetValidationAt(j)->Type() * alpha[k] * Classifier::Classify(GetValidationAt(j), k));
+		lambda[j] *= exp(-GetValidationAt(j)->Type() * alpha[k] * Classifier::Classify(GetValidationAt(j), minIndex));
 	Normalize(lambda, n);
 }
 
 void Iteration() {
 	clock_t t;
 	t = clock();
+	double initLambda = (double)1 / (double)n;
+	for (int j = 0 ; j < n ; j++)
+		lambda[j] = initLambda;
 	for (int i = 0 ; i < N ; i++) {
 		Iteration(i);
 	}
@@ -143,7 +133,7 @@ void Iteration() {
 void PrintAdaboost() {
 	ofstream out(dir + "adaboost.pos");
 	for (int i = 0 ; i < N ; i++)
-		out << feature[i] << '\t' << featurePos[feature[i]] << '\t' << w1[i] << '\t' << w2[i] << '\t' << alpha[i] << endl;
+		out << feature[i] << '\t' << featurePos[feature[i]] << '\t' << alpha[i] << endl;
 }
 
 }
