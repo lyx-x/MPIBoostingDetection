@@ -1,21 +1,21 @@
-Reading Images: 2.82387seconds.
-Computing classifiers locally 100 times: 2.4369seconds.
-
+Reading Images: 3.98872seconds.
+Computing classifiers locally 1000 times: 19.7028seconds.
+Computing Adaboost locally 5 times: 370.249seconds.
 Testing:
 
 Test Adaboost
 	Neg	Pos
-Neg	4315	349
-Pos	100	469
-Rate: 0.914198
-End of Adaboost Test: 0.40849seconds.
+Neg	4320	377
+Pos	95	441
+Rate: 0.909803
+End of Adaboost Test: 0.449748seconds.
 
 
 Test Classifier
 	Neg	Pos
-Neg	120	45
-Pos	3	132
-Rate: 0.84
-End of Classifier Test: 3.29074seconds.
+Neg	264	44
+Pos	6	186
+Rate: 0.9
+End of Classifier Test: 3.43652seconds.
 
-End of Test: 3.69923seconds.
+End of Test: 3.88628seconds.

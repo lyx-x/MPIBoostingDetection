@@ -31,6 +31,13 @@ void Normalize(double* lambda, int n) {
 		lambda[i] /= norm;
 }
 
+bool NotExist(int index, int k) {
+	for (int i = 0 ; i < k ; i++)
+		if (index == feature[i])
+			return false;
+	return true;
+}
+
 double ErrorParallel(int k) {
 	double sum = 0;
 	double localSum = 0;
@@ -109,7 +116,7 @@ void Iteration(int k) {
 	delete[] globalDist;
 	MPI::COMM_WORLD.Bcast(dist, featureSize, MPI_DOUBLE, 0);
 	for (int i = 0 ; i < featureSize ; i++)
-		if (dist[i] < errorLimit) {
+		if (dist[i] < errorLimit && NotExist(i, k)) {
 			minIndex = i;
 			errorLimit = dist[i];
 		}
@@ -130,6 +137,7 @@ void Iteration() {
 	}
 	t = clock() - t;
 	journal << "Computing Adaboost locally " << N << " times: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
+	PrintAdaboost();
 }
 
 void PrintAdaboost() {

@@ -29,11 +29,11 @@ int main(int argc, char *argv[]) {
 	mpiUtils::InitGather(featureSize);
 
 	Classifier::InitClassifier();
-	Classifier::TrainParallel(100);
+	Classifier::TrainParallel(1000);
 
-	Adaboost::InitAdaboost(1);
-	//Adaboost::Iteration();
-	Adaboost::ReadAdaboost();
+	Adaboost::InitAdaboost(5);
+	Adaboost::Iteration();
+	//Adaboost::ReadAdaboost();
 
 	clock_t t;
 	if (mpiUtils::rank == 0) {
