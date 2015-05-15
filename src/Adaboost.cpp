@@ -7,7 +7,7 @@
 
 #include "Adaboost.h"
 
-namespace Adaboost {
+namespace adaboost {
 
 double theta = 0;
 int n = 0;
@@ -41,7 +41,7 @@ double ErrorParallel(int k) {
 	double localSum = 0;
 	for (int j = mpiUtils::rank ; j < n ; j += mpiUtils::size) {
 		Image* img = GetValidationAt(j);
-		localSum += lambda[j] * Dirac(Classifier::Classify(img, k), img->Type());
+		localSum += lambda[j] * Dirac(classifier::Classify(img, k), img->Type());
 	}
 	MPI::COMM_WORLD.Allreduce(&localSum, &sum, 1, MPI_DOUBLE, MPI_SUM);
 	return sum;
@@ -51,7 +51,7 @@ double Error(int k) {
 	double sum = 0;
 	for (int j = 0 ; j < n ; j++) {
 		Image* img = GetValidationAt(j);
-		sum += lambda[j] * Dirac(Classifier::Classify(img, k), img->Type());
+		sum += lambda[j] * Dirac(classifier::Classify(img, k), img->Type());
 	}
 	return sum;
 }
@@ -66,7 +66,7 @@ void InitAdaboost(int i) {
 }
 
 void ReadAdaboost() {
-	ifstream in(dir + "adaboost.pos");
+	ifstream in(dir + "adaboost.jrl");
 	double tmp;
 	for (int i = 0 ; i < N ; i++)
 		in >> feature[i] >> tmp >> alpha[i];
@@ -84,7 +84,7 @@ int Classify(Image* img) {
 	double sum = 0;
 	double sumAlpha = 0;
 	for (int i = 0 ; i < N ; i++) {
-		sum += alpha[i] * Classifier::Classify(img, feature[i]);
+		sum += alpha[i] * classifier::Classify(img, feature[i]);
 		sumAlpha += alpha[i];
 	}
 	return sum >= sumAlpha * theta ? 1 : -1;
@@ -112,7 +112,7 @@ void Iteration(int k) {
 	feature[k] = minIndex;
 	alpha[k] = 0.5 * log(1.0 / errorLimit - 1);
 	for (int j = 0 ; j < n ; j++)
-		lambda[j] *= exp(-GetValidationAt(j)->Type() * alpha[k] * Classifier::Classify(GetValidationAt(j), minIndex));
+		lambda[j] *= exp(-GetValidationAt(j)->Type() * alpha[k] * classifier::Classify(GetValidationAt(j), minIndex));
 	Normalize(lambda, n);
 }
 
@@ -131,7 +131,7 @@ void Iteration() {
 }
 
 void PrintAdaboost() {
-	ofstream out(dir + "adaboost.pos");
+	ofstream out(dir + "adaboost.jrl");
 	for (int i = 0 ; i < N ; i++)
 		out << feature[i] << '\t' << featurePos[feature[i]] << '\t' << alpha[i] << endl;
 }

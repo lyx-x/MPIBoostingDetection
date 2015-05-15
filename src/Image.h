@@ -34,6 +34,7 @@ class Image {
 public:
 	Image();
 	Image(string); //width, height and path
+	Image(char*);
 	virtual ~Image();
 	void PrintRAW() const;
 	void PrintIntegral() const;

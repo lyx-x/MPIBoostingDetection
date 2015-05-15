@@ -1,6 +1,6 @@
 __author__ = 'lyx'
 from PIL import ImageDraw
-from RawFile import Image
+from RawFile import Img
 import sys
 
 
@@ -31,10 +31,10 @@ def draw(p, detail):
     p.rectangle(rect, fill=220, outline=200)
 
 features = []
-with open("../adaboost.pos", 'r') as file:
+with open("../adaboost.jrl", 'r') as file:
     for line in file:
         features.append(tuple(map(int, line.split('\t')[0:2])))
-image = Image(112, 92, sys.argv[1])
+image = Img(112, 92, sys.argv[1])
 img = image.draw()
 paint = ImageDraw.Draw(img)
 for feature in features:

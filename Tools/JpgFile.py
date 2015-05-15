@@ -1,6 +1,11 @@
 __author__ = 'lyx'
-from PIL import Image as Img
+from PIL import Image
 
-img = Img.open("im0.jpg")
-img = img.resize((92, 112), Img.ANTIALIAS)
-img.show()
+
+path = "IMG_8243"
+img = Image.open(path + '.PNG').convert('L')
+print(img)
+img.save(path + '.PNG')
+data = list(img.getdata())
+with open(path + '.raw', "wb") as file:
+    file.write(bytes(data))

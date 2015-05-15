@@ -21,6 +21,7 @@ extern const string dir;
 extern const string trainPath;
 extern const string validationPath;
 extern const string testPath;
+extern const string photoPath;
 extern const int width;
 extern const int height;
 extern ofstream error;

@@ -60,7 +60,7 @@ void InitFeatures(){
 }
 
 void PrintFeaturePos() {
-	ofstream out(dir + "feature.pos");
+	ofstream out(dir + "feature.jrl");
 	out << "Count: " << featureSize << endl;
 	for (int i = 0 ; i < featureSize ; i++) {
 		int x, y, w, h, type;
@@ -159,6 +159,21 @@ Image::Image(string path) {
 	for (int i = 1 ; i < width ; i++)
 		for (int j = 1 ; j < height ; j++)
 			SetIntegralAt(i, j, IntegralAt(i - 1, j) + IntegralAt(i, j - 1) + PixelAt(i, j) - IntegralAt(i - 1, j - 1));
+}
+
+Image::Image(char* cont) {
+	file = "TMP";
+	content = cont;
+	integral = new int[height * width];
+	SetIntegralAt(0, 0, PixelAt(0, 0));
+	for (int i = 1 ; i < width ; i++)
+		SetIntegralAt(i, 0, IntegralAt(i - 1, 0) + PixelAt(i, 0));
+	for (int j = 1 ; j < height ; j++)
+		SetIntegralAt(0, j, IntegralAt(0, j - 1) + PixelAt(0, j));
+	for (int i = 1 ; i < width ; i++)
+		for (int j = 1 ; j < height ; j++)
+			SetIntegralAt(i, j, IntegralAt(i - 1, j) + IntegralAt(i, j - 1) + PixelAt(i, j) - IntegralAt(i - 1, j - 1));
+	c = 0;
 }
 
 Image::~Image() {

@@ -1,8 +1,8 @@
 __author__ = 'lyx'
-from PIL import Image as Img
+from PIL import Image
 
 
-class Image:
+class Img:
     pixels = []
     height = 92
     width = 112
@@ -38,7 +38,7 @@ class Image:
                     file.write(bytes([self.pixels[j][i]]))
 
     def show(self):
-        im = Img.new('L', (self.width, self.height))
+        im = Image.new('L', (self.width, self.height))
         data = []
         for line in self.pixels:
             data += line
@@ -46,7 +46,7 @@ class Image:
         im.show()
 
     def draw(self):
-        im = Img.new('L', (self.width, self.height))
+        im = Image.new('L', (self.width, self.height))
         data = []
         for line in self.pixels:
             data += line
@@ -56,12 +56,19 @@ class Image:
 
 def transpose(files):
     for path in files:
-        img = Image(92, 112, path)
+        img = Img(92, 112, path)
         img.transpose()
 
 
 def verify(file):
-    img = Image(112, 92, file)
+    img = Img(112, 92, file)
     img.show()
-    img = Image(92, 112, file + ".old")
+    img = Img(92, 112, file + ".old")
     img.show()
+
+
+def read(file):
+    img = Img(3636, 2425, file)
+    img.show()
+
+read("IMG_8243.raw")

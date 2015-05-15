@@ -15,7 +15,7 @@ using namespace std;
 using namespace imageUtils;
 using namespace mpiUtils;
 
-namespace Adaboost {
+namespace adaboost {
 
 extern double theta;
 

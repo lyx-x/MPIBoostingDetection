@@ -16,17 +16,18 @@ using namespace std;
 using namespace imageUtils;
 using namespace mpiUtils;
 
-namespace Classifier {
+namespace classifier {
 
 void InitClassifier();
 int Classify(Image*, int); //function h(x)
 int Classify(Image*);
-void Train(int);
-void TrainParallel(int);
+void Train();
+void TrainParallel();
+void ReadClassifier();
 double GetW1At(int);
 double GetW2At(int);
 void SetEpsilon(double);
-void Print();
+void PrintClassifier();
 void DropClassifier();
 
 }

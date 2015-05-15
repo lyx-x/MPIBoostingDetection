@@ -7,7 +7,7 @@
 
 #include "Classifier.h"
 
-namespace Classifier {
+namespace classifier {
 
 double epsilon(0.5);
 double* w1 = NULL;
@@ -30,11 +30,11 @@ int Classify(Image* img) {
 	return sum >= 0 ? 1 : -1;
 }
 
-void Train(int K, int index) {
+void Train(int index) {
 	w1[index] = 1;
 	w2[index] = 0;
-	for (int i = 0 ; i < K ; i++) {
-		int choice = RandomImage();
+	for (int i = 0 ; i < negCount + posCount ; i++) {
+		int choice = i; //No longer random
 		Image* img = GetTrainAt(choice);
 		int x = img->FeatureAt(index);
 		int h = Classify(img, index);
@@ -43,16 +43,16 @@ void Train(int K, int index) {
 	}
 }
 
-void Train(int K) {
+void Train() {
 	clock_t t;
 	t = clock();
 	for (int index = 0 ; index < featureSize ; index++)
-		Train(K, index);
+		Train(index);
 	t = clock() - t;
-	journal << "Computing classifiers locally " << K << " times: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
+	journal << "Computing classifiers locally " << negCount + posCount << " times: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
 }
 
-void TrainParallel(int K) {
+void TrainParallel() {
 	clock_t t;
 	t = clock();
 	double* globalW1 = new double[featureSize];
@@ -74,7 +74,7 @@ void TrainParallel(int K) {
 	 * Gather Method
 	 */
 	for (int i = 0 ; i < recvCounts[mpiUtils::rank] ; i++)
-		Train(K, i + displs[mpiUtils::rank]);
+		Train(i + displs[mpiUtils::rank]);
 	MPI::COMM_WORLD.Gatherv(w1 + displs[mpiUtils::rank], recvCounts[mpiUtils::rank], MPI_DOUBLE, globalW1, recvCounts, displs, MPI_DOUBLE, 0);
 	MPI::COMM_WORLD.Gatherv(w2 + displs[mpiUtils::rank], recvCounts[mpiUtils::rank], MPI_DOUBLE, globalW2, recvCounts, displs, MPI_DOUBLE, 0);
 	if (mpiUtils::rank == 0)
@@ -86,8 +86,18 @@ void TrainParallel(int K) {
 	MPI::COMM_WORLD.Bcast(w2, featureSize, MPI_DOUBLE, 0);
 	delete[] globalW1;
 	delete[] globalW2;
+	PrintClassifier();
 	t = clock() - t;
-	journal << "Computing classifiers locally " << K << " times: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
+	journal << "Computing classifiers parallelly " << posCount + negCount << " times: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
+}
+
+void ReadClassifier() {
+	ifstream in(dir + "classifier.jrl");
+	for (int i = 0 ; i < featureSize ; i++) {
+		int tmp;
+		in >> tmp >> w1[i] >> w2[i];
+	}
+	in.close();
 }
 
 double GetW1At(int index) {
@@ -102,11 +112,11 @@ void SetEpsilon(double e) {
 	epsilon = e;
 }
 
-void Print() {
-	ofstream out(dir + "classifier.pos");
+void PrintClassifier() {
+	ofstream out(dir + "classifier.jrl");
 	for (int i = 0 ; i < featureSize ; i++) {
 		out << i << '\t';
-		out << "w1: " << w1[i] << "\t\tw2: " << w2[i] << endl;
+		out << w1[i] << '\t' << w2[i] << endl;
 	}
 	out.close();
 }

@@ -16,10 +16,11 @@ const int posCount(818);
 const string trainPath = dir + "app/";
 const string validationPath = dir + "dev/";
 const string testPath = dir + "test/";
+const string photoPath = dir + "photo/";
 const int width(112);
 const int height(92);
 ofstream error(dir + "err.log");
-ofstream journal(dir + "general.log");
+ofstream journal(dir + "general.jrl");
 
 } /* namespace imageUtils */
 
