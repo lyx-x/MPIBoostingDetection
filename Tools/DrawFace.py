@@ -11,6 +11,10 @@ image = Img(3636, 2425, sys.argv[1])
 img = image.draw()
 paint = ImageDraw.Draw(img)
 for face in faces:
-    rect = (face[0], face[1], face[0] + face[2], face[1] + face[3])
-    paint.rectangle(rect, outline=50)
+    for i in range(5):
+        rect = (face[0] + 2 * i, face[1] + 2 * i, face[0] + face[2] - 2 * i * 2, face[1] + face[3] - 2 * i * 2)
+        paint.rectangle(rect, outline=250)
+        rect = (face[0] + 2 * i + 1, face[1] + 2 * i + 1, face[0] + face[2] - 2 * i * 2 - 2, face[1] + face[3] - 2 * i * 2 - 2)
+        paint.rectangle(rect, outline=50)
 img.show()
+img.save("../photo/photo1.result.jpg")

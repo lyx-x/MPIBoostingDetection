@@ -25,19 +25,18 @@ int main(int argc, char *argv[]) {
 
 	InitFeatures();
 	InitImages();
-	//PrintFeaturePos();
 
 	mpiUtils::rank = MPI::COMM_WORLD.Get_rank();
 	mpiUtils::size = MPI::COMM_WORLD.Get_size();
 	mpiUtils::InitGather(featureSize);
 
 	classifier::InitClassifier();
-	classifier::TrainParallel();
-	//classifier::ReadClassifier();
+	//classifier::TrainParallel();
+	classifier::ReadClassifier();
 
-	adaboost::InitAdaboost(50);
-	//adaboost::Iteration();
-	adaboost::ReadAdaboost();
+	adaboost::InitAdaboost(10);
+	adaboost::Iteration();
+	//adaboost::ReadAdaboost();
 	adaboost::theta = 0.15;
 
 	clock_t t;
@@ -45,9 +44,9 @@ int main(int argc, char *argv[]) {
 		journal << "Testing:" << endl;
 		t = clock();
 	}
-	//TestAdaboost(negCount + posCount);
+	TestAdaboost(negCount + posCount);
 	//TestClassifier(100);
-	TestPhoto();
+	//TestPhoto();
 	if (mpiUtils::rank == 0) {
 		t = clock() - t;
 		journal << "End of Test: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
@@ -111,6 +110,7 @@ void TestClassifier(int n) {
 }
 
 void TestAdaboost(int n) {
+	ofstream out(dir + "adaboost.theta");
 	adaboost::theta = -1;
 	while (adaboost::theta <= 1) {
 		clock_t t = clock();
@@ -131,11 +131,15 @@ void TestAdaboost(int n) {
 		MPI::COMM_WORLD.Reduce(summary, globalSummary, 4, MPI_INT, MPI_SUM, 0);
 		if (mpiUtils::rank == 0) {
 			journal << "\tNeg\tPos\n";
+			double correct = (double)(globalSummary[0][0] + globalSummary[1][1]) / (double)n;
 			journal << "Neg\t" << globalSummary[0][0] << '\t' << globalSummary[1][0] << '\n';
 			journal << "Pos\t" << globalSummary[0][1] << '\t' << globalSummary[1][1] << '\n';
-			journal << "Rate: " << (double)(globalSummary[0][0] + globalSummary[1][1]) / (double)n << endl;
+			journal << "Rate: " << correct << endl;
 			t = clock() - t;
 			journal << "End of Adaboost Test: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n\n";
+			double fauxNeg = globalSummary[1][0] / (double)(globalSummary[0][0] + globalSummary[1][0]);
+			double fauxPos = globalSummary[0][1] / (double)(globalSummary[0][1] + globalSummary[1][1]);
+			out << adaboost::theta << '\t' << correct << '\t' << fauxNeg << '\t' << fauxPos << endl;
 		}
 		adaboost::theta += 0.1;
 	}

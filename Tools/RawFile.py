@@ -71,4 +71,4 @@ def read(file):
     img = Img(3636, 2425, file)
     img.show()
 
-read("IMG_8243.raw")
+#read("IMG_8243.raw")

@@ -57,6 +57,7 @@ void InitFeatures(){
 						count++;
 					}
 				}
+	PrintFeaturePos();
 }
 
 void PrintFeaturePos() {
