@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 #include "Globals.h"
 
 using namespace std;

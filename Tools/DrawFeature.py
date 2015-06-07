@@ -3,7 +3,7 @@ from PIL import ImageDraw, Image
 from RawFile import Img
 import sys
 
-inc = 4;
+inc = 8;
 
 def decode(feature):
     m = max(92, 112) // inc + 1

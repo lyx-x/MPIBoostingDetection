@@ -30,9 +30,13 @@ public:
 	int CountFace() const;
 	void Print();
 	void PrintFaces();
+	void SetBaseDimension(int, int, int);
 private:
 	int photoWidth;
 	int photoHeight;
+	int baseWidth;
+	int baseHeight;
+	int loop;
 	string file;
 	char* content;
 	vector<Face> faces;

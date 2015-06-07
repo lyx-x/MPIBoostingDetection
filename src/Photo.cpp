@@ -16,6 +16,9 @@ Photo::Photo() {
 	content = NULL;
 	photoWidth = 0;
 	photoHeight = 0;
+	baseWidth = imageUtils::width;
+	baseHeight = imageUtils::height;
+	loop = 1;
 }
 
 Photo::Photo(int w, int h, string path): photoWidth(w), photoHeight(h) {
@@ -25,6 +28,9 @@ Photo::Photo(int w, int h, string path): photoWidth(w), photoHeight(h) {
 	img.read(content, h * w);
 	img.close();
 	faces.clear();
+	baseWidth = imageUtils::width;
+	baseHeight = imageUtils::height;
+	loop = 1;
 }
 
 Photo::~Photo() {
@@ -34,26 +40,25 @@ Photo::~Photo() {
 //Public Methods
 
 void Photo::FindFace() {
-	int baseWidth = 224;
-	int baseHeight = 184;
-	//int largest = max(photoHeight / baseHeight, photoWidth / baseWidth);
 	int count = 0;
-	for (int r = 1 ; r <= 2 ; r++) {
+	for (int r = 1 ; r <= loop ; r++) {
 		int w = baseWidth * r;
 		int h = baseHeight * r;
-		int deltaX = w / 12;
-		int deltaY = h / 12;
+		int deltaX = w / 24;
+		int deltaY = h / 24;
 		for (int x = 0 ; x < photoWidth - w ; x += deltaX)
 			for (int y = 0 ; y < photoHeight - h ; y += deltaY) {
 				count++;
 				Image* test = Resize(x, y, w, h);
 				int result = adaboost::Classify(test);
-				if (result == 1)
+				if (result == 1) {
 					faces.push_back(Face(x, y, w, h));
+				}
 				delete test;
 			}
 	}
 	cout << count << endl;
+	PrintFaces();
 }
 
 Face Photo::GetFaceAt(int index) const {
@@ -81,6 +86,12 @@ void Photo::PrintFaces() {
 	for (Face f : faces) {
 		out << f.x << '\t' << f.y << '\t' << f.w << '\t' << f.h << endl;
 	}
+}
+
+void Photo::SetBaseDimension(int w, int h, int l) {
+	baseWidth = w;
+	baseHeight = h;
+	loop = l;
 }
 
 //Private Methods

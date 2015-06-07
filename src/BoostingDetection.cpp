@@ -34,9 +34,9 @@ int main(int argc, char *argv[]) {
 	//classifier::TrainParallel();
 	classifier::ReadClassifier();
 
-	adaboost::InitAdaboost(10);
-	adaboost::Iteration();
-	//adaboost::ReadAdaboost();
+	adaboost::InitAdaboost(150);
+	//adaboost::Iteration();
+	adaboost::ReadAdaboost();
 	adaboost::theta = 0.15;
 
 	clock_t t;
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 	}
 	TestAdaboost(negCount + posCount);
 	//TestClassifier(100);
-	//TestPhoto();
+	if (mpiUtils::rank == 0) TestPhoto();
 	if (mpiUtils::rank == 0) {
 		t = clock() - t;
 		journal << "End of Test: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n";
@@ -132,9 +132,16 @@ void TestAdaboost(int n) {
 		if (mpiUtils::rank == 0) {
 			journal << "\tNeg\tPos\n";
 			double correct = (double)(globalSummary[0][0] + globalSummary[1][1]) / (double)n;
+			double tPrecision = (double)globalSummary[1][1] / (double)(globalSummary[0][1] + globalSummary[1][1]);
+			double tRappel = (double)globalSummary[1][1] / (double)(globalSummary[1][0] + globalSummary[1][1]);
+			double fScore = 2 / (1 / tPrecision + 1 / tRappel);
 			journal << "Neg\t" << globalSummary[0][0] << '\t' << globalSummary[1][0] << '\n';
 			journal << "Pos\t" << globalSummary[0][1] << '\t' << globalSummary[1][1] << '\n';
 			journal << "Rate: " << correct << endl;
+			journal << "Misclassification: " << 1 - correct << endl;
+			journal << "Precision: " << tPrecision << endl;
+			journal << "Recall: " << tRappel << endl;
+			journal << "F-Score: " << fScore << endl;
 			t = clock() - t;
 			journal << "End of Adaboost Test: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n\n";
 			double fauxNeg = globalSummary[1][0] / (double)(globalSummary[0][0] + globalSummary[1][0]);
@@ -147,9 +154,16 @@ void TestAdaboost(int n) {
 
 void TestPhoto() {
 	clock_t t = clock();
-	Photo p(3636, 2425, photoPath + "photo1.raw");
+	adaboost::theta = 0.05;
+	//Photo p(3636, 2425, photoPath + "photo1.raw");
+	//p.SetBaseDimension(224, 184, 1); // photo1;
+	//Photo p(1320, 712, photoPath + "photo2.raw");
+	//p.SetBaseDimension(56, 46, 1);
+	Photo p(544, 432, photoPath + "photo3.raw");
+	p.SetBaseDimension(56, 46, 1);
+	//p.Print();
 	p.FindFace();
-	p.PrintFaces();
+	t = clock() - t;
 	if (mpiUtils::rank == 0) {
 		journal << "End of Photo Test: " << ((float)t)/CLOCKS_PER_SEC << "seconds.\n\n";
 	}

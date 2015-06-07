@@ -1,5 +1,5 @@
-Reading Images: 4.76199seconds.
-Computing Adaboost locally 10 times: 803.789seconds.
+Reading Images: 2.79002seconds.
+Read Adaboost 150 times
 Testing:
 
 Test Adaboost: -1
@@ -7,166 +7,252 @@ Test Adaboost: -1
 Neg	0	0
 Pos	4415	818
 Rate: 0.156316
-End of Adaboost Test: 0.006367seconds.
+Misclassification: 0.843684
+Precision: 0.156316
+Recall: 1
+F-Score: 0.270369
+End of Adaboost Test: 0.113401seconds.
 
 
 Test Adaboost: -0.9
 	Neg	Pos
-Neg	170	0
-Pos	4245	818
-Rate: 0.188802
-End of Adaboost Test: 0.004617seconds.
+Neg	0	0
+Pos	4415	818
+Rate: 0.156316
+Misclassification: 0.843684
+Precision: 0.156316
+Recall: 1
+F-Score: 0.270369
+End of Adaboost Test: 0.116017seconds.
 
 
 Test Adaboost: -0.8
 	Neg	Pos
-Neg	811	0
-Pos	3604	818
-Rate: 0.311294
-End of Adaboost Test: 0.004595seconds.
+Neg	0	0
+Pos	4415	818
+Rate: 0.156316
+Misclassification: 0.843684
+Precision: 0.156316
+Recall: 1
+F-Score: 0.270369
+End of Adaboost Test: 0.113681seconds.
 
 
 Test Adaboost: -0.7
 	Neg	Pos
-Neg	878	0
-Pos	3537	818
-Rate: 0.324097
-End of Adaboost Test: 0.00467seconds.
+Neg	3	0
+Pos	4412	818
+Rate: 0.156889
+Misclassification: 0.843111
+Precision: 0.156405
+Recall: 1
+F-Score: 0.270503
+End of Adaboost Test: 0.11315seconds.
 
 
 Test Adaboost: -0.6
 	Neg	Pos
-Neg	2082	1
-Pos	2333	817
-Rate: 0.553984
-End of Adaboost Test: 0.004631seconds.
+Neg	5	0
+Pos	4410	818
+Rate: 0.157271
+Misclassification: 0.842729
+Precision: 0.156465
+Recall: 1
+F-Score: 0.270592
+End of Adaboost Test: 0.112909seconds.
 
 
 Test Adaboost: -0.5
 	Neg	Pos
-Neg	2596	4
-Pos	1819	814
-Rate: 0.651634
-End of Adaboost Test: 0.004675seconds.
+Neg	15	0
+Pos	4400	818
+Rate: 0.159182
+Misclassification: 0.840818
+Precision: 0.156765
+Recall: 1
+F-Score: 0.27104
+End of Adaboost Test: 0.11418seconds.
 
 
 Test Adaboost: -0.4
 	Neg	Pos
-Neg	3318	5
-Pos	1097	813
-Rate: 0.789413
-End of Adaboost Test: 0.004644seconds.
+Neg	186	0
+Pos	4229	818
+Rate: 0.191859
+Misclassification: 0.808141
+Precision: 0.162076
+Recall: 1
+F-Score: 0.278943
+End of Adaboost Test: 0.113095seconds.
 
 
 Test Adaboost: -0.3
 	Neg	Pos
-Neg	3734	17
-Pos	681	801
-Rate: 0.866616
-End of Adaboost Test: 0.004614seconds.
+Neg	1188	0
+Pos	3227	818
+Rate: 0.383337
+Misclassification: 0.616663
+Precision: 0.202225
+Recall: 1
+F-Score: 0.336418
+End of Adaboost Test: 0.112854seconds.
 
 
 Test Adaboost: -0.2
 	Neg	Pos
-Neg	4074	26
-Pos	341	792
-Rate: 0.929868
-End of Adaboost Test: 0.004631seconds.
+Neg	3098	1
+Pos	1317	817
+Rate: 0.748137
+Misclassification: 0.251863
+Precision: 0.382849
+Recall: 0.998778
+F-Score: 0.553523
+End of Adaboost Test: 0.113108seconds.
 
 
 Test Adaboost: -0.1
 	Neg	Pos
-Neg	4280	76
-Pos	135	742
-Rate: 0.959679
-End of Adaboost Test: 0.00472seconds.
+Neg	4167	4
+Pos	248	814
+Rate: 0.951844
+Misclassification: 0.0481559
+Precision: 0.766478
+Recall: 0.99511
+F-Score: 0.865957
+End of Adaboost Test: 0.112909seconds.
 
 
 Test Adaboost: -1.38778e-16
 	Neg	Pos
-Neg	4348	106
-Pos	67	712
-Rate: 0.966941
-End of Adaboost Test: 0.004732seconds.
+Neg	4383	23
+Pos	32	795
+Rate: 0.98949
+Misclassification: 0.0105102
+Precision: 0.961306
+Recall: 0.971883
+F-Score: 0.966565
+End of Adaboost Test: 0.116031seconds.
 
 
 Test Adaboost: 0.1
 	Neg	Pos
-Neg	4379	286
-Pos	36	532
-Rate: 0.938467
-End of Adaboost Test: 0.004647seconds.
+Neg	4413	162
+Pos	2	656
+Rate: 0.96866
+Misclassification: 0.0313396
+Precision: 0.99696
+Recall: 0.801956
+F-Score: 0.888889
+End of Adaboost Test: 0.113046seconds.
 
 
 Test Adaboost: 0.2
 	Neg	Pos
-Neg	4402	321
-Pos	13	497
-Rate: 0.936174
-End of Adaboost Test: 0.004632seconds.
+Neg	4415	484
+Pos	0	334
+Rate: 0.90751
+Misclassification: 0.09249
+Precision: 1
+Recall: 0.408313
+F-Score: 0.579861
+End of Adaboost Test: 0.112977seconds.
 
 
 Test Adaboost: 0.3
 	Neg	Pos
-Neg	4406	462
-Pos	9	356
-Rate: 0.909994
-End of Adaboost Test: 0.004475seconds.
+Neg	4415	765
+Pos	0	53
+Rate: 0.853812
+Misclassification: 0.146188
+Precision: 1
+Recall: 0.0647922
+F-Score: 0.121699
+End of Adaboost Test: 0.112927seconds.
 
 
 Test Adaboost: 0.4
 	Neg	Pos
-Neg	4411	493
-Pos	4	325
-Rate: 0.905026
-End of Adaboost Test: 0.004152seconds.
+Neg	4415	813
+Pos	0	5
+Rate: 0.84464
+Misclassification: 0.15536
+Precision: 1
+Recall: 0.00611247
+F-Score: 0.0121507
+End of Adaboost Test: 0.112833seconds.
 
 
 Test Adaboost: 0.5
 	Neg	Pos
-Neg	4413	604
-Pos	2	214
-Rate: 0.884196
-End of Adaboost Test: 0.004055seconds.
+Neg	4415	818
+Pos	0	0
+Rate: 0.843684
+Misclassification: 0.156316
+Precision: -nan
+Recall: 0
+F-Score: -nan
+End of Adaboost Test: 0.114486seconds.
 
 
 Test Adaboost: 0.6
 	Neg	Pos
-Neg	4415	666
-Pos	0	152
-Rate: 0.872731
-End of Adaboost Test: 0.003985seconds.
+Neg	4415	818
+Pos	0	0
+Rate: 0.843684
+Misclassification: 0.156316
+Precision: -nan
+Recall: 0
+F-Score: -nan
+End of Adaboost Test: 0.113126seconds.
 
 
 Test Adaboost: 0.7
 	Neg	Pos
-Neg	4415	752
-Pos	0	66
-Rate: 0.856297
-End of Adaboost Test: 0.003931seconds.
+Neg	4415	818
+Pos	0	0
+Rate: 0.843684
+Misclassification: 0.156316
+Precision: -nan
+Recall: 0
+F-Score: -nan
+End of Adaboost Test: 0.113282seconds.
 
 
 Test Adaboost: 0.8
 	Neg	Pos
-Neg	4415	783
-Pos	0	35
-Rate: 0.850373
-End of Adaboost Test: 0.003889seconds.
+Neg	4415	818
+Pos	0	0
+Rate: 0.843684
+Misclassification: 0.156316
+Precision: -nan
+Recall: 0
+F-Score: -nan
+End of Adaboost Test: 0.113865seconds.
 
 
 Test Adaboost: 0.9
 	Neg	Pos
-Neg	4415	812
-Pos	0	6
-Rate: 0.844831
-End of Adaboost Test: 0.003925seconds.
+Neg	4415	818
+Pos	0	0
+Rate: 0.843684
+Misclassification: 0.156316
+Precision: -nan
+Recall: 0
+F-Score: -nan
+End of Adaboost Test: 0.114546seconds.
 
 
 Test Adaboost: 1
 	Neg	Pos
-Neg	4415	812
-Pos	0	6
-Rate: 0.844831
-End of Adaboost Test: 0.003855seconds.
+Neg	4415	818
+Pos	0	0
+Rate: 0.843684
+Misclassification: 0.156316
+Precision: -nan
+Recall: 0
+F-Score: -nan
+End of Adaboost Test: 0.113679seconds.
 
-End of Test: 0.094623seconds.
+End of Photo Test: 24.2851seconds.
+
+End of Test: 26.6715seconds.
